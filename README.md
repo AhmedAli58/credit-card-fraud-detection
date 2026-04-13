@@ -1,16 +1,35 @@
+# Credit Card Fraud Detection
+
+Detecting fraud in credit card transactions is challenging due to extreme class imbalance (only 0.17% of transactions are fraudulent). The objective is to identify most fraud cases while minimizing false alarms and reducing manual review effort.
+
+---
+
 ## Problem
 
-Credit card fraud costs financial institutions billions annually. The challenge is not building a classifier — it is building one that works under extreme class imbalance (0.17% fraud), minimizes false alarms that frustrate legitimate customers, and produces reliable risk scores for analyst prioritization.
+Financial institutions need systems that:
+- Detect fraudulent transactions accurately  
+- Avoid flagging legitimate users unnecessarily  
+- Reduce the volume of transactions requiring manual review  
 
 ---
 
 ## Approach
 
-Three deliberate decisions drove the results:
+- **Data Split**  
+  Stratified 80/20 train-test split  
+  5-fold cross-validation used for model tuning, with final metrics evaluated on a held-out test set  
 
-- **scale_pos_weight over SMOTE** — XGBoost's native class weighting (578x) avoids synthetic noise while correctly penalizing missed fraud
-- **F-beta threshold optimization** — threshold tuned to weight precision 2x over recall, matching real banking cost structure
-- **Isotonic calibration** — ensures risk scores are statistically reliable, not just ranked
+- **Handling Class Imbalance**  
+  SMOTE applied within training folds via pipeline to avoid data leakage  
+
+- **Model**  
+  XGBoost classifier trained on transaction features  
+
+- **Threshold Optimization**  
+  Decision threshold tuned using F-beta (β=0.5) to emphasize precision and reduce false alarms  
+
+- **Calibration**  
+  Isotonic calibration applied to ensure predicted probabilities reflect true likelihood of fraud  
 
 ---
 
@@ -22,35 +41,38 @@ Three deliberate decisions drove the results:
 | PR-AUC | 0.8738 |
 | Precision | 93% |
 | Recall | 81% |
-| False Positives | 7 |
-| False Negatives | 19 |
-| Business Cost | $9,570 |
-
-Reviewing the top 1% of flagged transactions catches 90% of all fraud — reducing analyst workload by 99%.
 
 ---
 
-## Stack
+## Business Impact
 
-![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat&logo=python&logoColor=white)
-![XGBoost](https://img.shields.io/badge/XGBoost-2.0-189AB4?style=flat)
-![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.5-F7931E?style=flat&logo=scikit-learn&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-1.43-FF4B4B?style=flat&logo=streamlit&logoColor=white)
-![Plotly](https://img.shields.io/badge/Plotly-5.24-3F4F75?style=flat&logo=plotly&logoColor=white)
-![Pandas](https://img.shields.io/badge/Pandas-2.2-150458?style=flat&logo=pandas&logoColor=white)
+Transactions are ranked by predicted risk score.  
+Reviewing the **top 1% highest-risk transactions captures ~90% of fraud**, reducing manual review workload by ~99%.
 
 ---
 
 ## Dataset
 
-[Kaggle Credit Card Fraud Detection](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) — 284,807 transactions, 492 fraud cases, features V1-V28 PCA-transformed for confidentiality.
+- 284,807 transactions  
+- 492 fraud cases (0.17%)  
+- Source: Kaggle Credit Card Fraud Detection dataset  
+
+---
+
+## Tools
+
+- Python  
+- XGBoost  
+- Scikit-learn  
+- Pandas  
+- Streamlit  
 
 ---
 
 ## Run Locally
+
 ```bash
 git clone https://github.com/AhmedAli58/credit-card-fraud-detection.git
 cd credit-card-fraud-detection
 pip install -r requirements.txt
 streamlit run app.py
-```
