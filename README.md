@@ -1,11 +1,3 @@
-# Credit Card Fraud Detection System
-
-> Detecting fraud in 0.17% signal — building a precision-first system for real banking constraints.
-
-**Live Dashboard:** [View Here](https://credit-card-fraud-detection-33azof3lzauheeppgmaxzx.streamlit.app) | **Notebook:** [Kaggle](https://www.kaggle.com/code/ahmedallii/credit-card-fraud-detection-system)
-
----
-
 ## Problem
 
 Credit card fraud costs financial institutions billions annually. The challenge is not building a classifier — it is building one that works under extreme class imbalance (0.17% fraud), minimizes false alarms that frustrate legitimate customers, and produces reliable risk scores for analyst prioritization.
